@@ -1,0 +1,115 @@
+version: '3.3'
+
+services:
+  app:
+    container_name: mid_app
+    build:
+      context: .
+    command: >
+     sh -c "python manage.py migrate &&
+            python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - 8000:8000
+    volumes:
+      - ./app:/app
+      - ./data/web:/vol/web
+
+    environment:
+      - SECRET_KEY=devsecretkey
+      - DEBUG=1
+      - DB_HOST=db
+      - DB_NAME=dbcentralized
+      - DB_USER=dbcentralized
+      - DB_PASS=changeme
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
+
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:13-alpine
+    container_name: middb-centralized
+    environment:
+      - POSTGRES_DB=dbcentralized
+      - POSTGRES_USER=dbcentralized
+      - POSTGRES_PASSWORD=changeme
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+
+    ports:
+      - 5432:5432
+
+#   mysql:
+#     image: mysql:5.7.41-debian
+#     container_name: remote_mysql
+#     command: --default-authentication-plugin=mysql_native_password
+#     restart: always
+#     environment:
+#       - MYSQL_USER=nXavier
+#       - MYSQL_PASSWORD=Lun@rOrbit
+#       - MYSQL_DATABASE=aux_central_db
+#       - MYSQL_ALLOW_EMPTY_PASSWORD=""
+# #      - MYSQL_ROOT_PASSWORD=AAAAAAA
+#     volumes:
+#       - mysqldata:/var/lib/mysql
+#       - ./home/xavier/Documents/certificados:/certs
+
+#     ports:
+#       - 23307:23307
+  
+  celery:
+    container_name: mid-celery-centralized
+    restart: always
+    build: 
+      context: . 
+    command: celery -A app worker -l info
+    volumes: 
+      - ./app:/app
+    environment:
+      - SECRET_KEY=devsecretkey
+      - DEBUG=1
+      - DB_HOST=db
+      - DB_NAME=dbcentralized
+      - DB_USER=dbcentralized
+      - DB_PASS=changeme
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
+      
+    depends_on:
+      - app
+      - redis
+    
+  celery-beat:
+    container_name: mid-celery-beat-centralized
+    build:
+      context: .
+    command: celery -A app beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes: 
+      - ./app:/app
+    environment:
+      - SECRET_KEY=devsecretkey
+      - DEBUG=1
+      - DB_HOST=db
+      - DB_NAME=dbcentralized
+      - DB_USER=dbcentralized
+      - DB_PASS=changeme
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
+
+    depends_on:
+      - app
+      - redis
+
+  redis:
+      image: redis
+      container_name: mid-redis-centralized
+      ports:
+        - 6379:6379
+  
+
+volumes:
+  pgdata:
+
+      
