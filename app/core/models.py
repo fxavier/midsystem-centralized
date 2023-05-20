@@ -2,35 +2,66 @@ from django.db import models
 
 
 class ElegiveisCv(models.Model):
-    health_facility = models.CharField(max_length=255, blank=True, null=True)
+    province = models.CharField(max_length=255)
     district = models.CharField(max_length=255, blank=True, null=True)
-    patient_id = models.IntegerField()
-    nid = models.CharField(max_length=50, blank=True, null=True)
-    name = models.CharField(max_length=255, blank=True, null=True)
-    gender = models.CharField(max_length=50, blank=True, null=True)
-    age = models.DecimalField(max_digits=7, decimal_places=0)
-    phone = models.CharField(max_length=50, blank=True, null=True)
+    community = models.CharField(max_length=255, blank=True, null=True)
+    health_facility = models.CharField(max_length=255, blank=True, null=True)
+   # patient_id = models.IntegerField()
+    patient_name = models.CharField(max_length=255)
+    patient_identifier = models.CharField(
+        max_length=255, null=True, blank=True)
+    age = models.IntegerField()
+    phone_number = models.CharField(max_length=255, null=True, blank=True)
+    pregnant = models.CharField(
+        max_length=10, default="NAO", null=True, blank=True)
+    last_vl_date = models.DateTimeField(null=True, blank=True)
+    last_vl_value = models.CharField(max_length=100, null=True, blank=True)
+    last_vl_quality = models.CharField(max_length=100, null=True, blank=True)
+    created_at = models.DateField()
 
     def __str__(self):
-        return self.name
+        return self.patient_name
+
+
+class MarcadosLevantamento(models.Model):
+    province = models.CharField(max_length=150)
+    district = models.CharField(max_length=150, blank=True, null=True)
+    health_facility = models.CharField(max_length=150)
+    # patient_id = models.IntegerField()
+    patient_name = models.CharField(max_length=255)
+    patient_identifier = models.CharField(
+        max_length=255, null=True, blank=True)
+    age = models.IntegerField()
+    phone_number = models.CharField(max_length=150, null=True, blank=True)
+    appointment_date = models.DateTimeField()
+    next_appointment_date = models.DateTimeField()
+    gender = models.CharField(max_length=150)
+    community = models.CharField(max_length=500, blank=True, null=True)
+    pregnant = models.CharField(max_length=10, default="NAO")
+    breastfeeding = models.CharField(max_length=10, default="NAO")
+    tb = models.CharField(max_length=10, default="NAO")
+    created_at = models.DateField()
+
+    def __str__(self):
+        return self.patient_name
 
 
 class Visit(models.Model):
     province = models.CharField(max_length=150)
     district = models.CharField(max_length=150, blank=True, null=True)
     health_facility = models.CharField(max_length=150)
-    patient_id = models.IntegerField()
+    # patient_id = models.IntegerField()
     patient_name = models.CharField(max_length=255)
     patient_identifier = models.CharField(
         max_length=255, null=True, blank=True)
     age = models.IntegerField()
     phone_number = models.CharField(max_length=150, null=True, blank=True)
-    appointment_date = models.DateField()
-    next_appointment_date = models.DateField()
+    appointment_date = models.DateTimeField()
+    next_appointment_date = models.DateTimeField()
     gender = models.CharField(max_length=150)
     community = models.CharField(max_length=500, blank=True, null=True)
     pregnant = models.CharField(max_length=10, default="NAO")
-    brestfeeding = models.CharField(max_length=10, default="NAO")
+    breastfeeding = models.CharField(max_length=10, default="NAO")
     tb = models.CharField(max_length=10, default="NAO")
     synced = models.BooleanField(default=False)
 
@@ -42,7 +73,7 @@ class MissedAppointment(models.Model):
     province = models.CharField(max_length=150)
     district = models.CharField(max_length=150, blank=True, null=True)
     health_facility = models.CharField(max_length=150, blank=True, null=True)
-    patient_id = models.IntegerField()
+   # patient_id = models.IntegerField()
     patient_name = models.CharField(max_length=255)
     patient_identifier = models.CharField(
         max_length=255, null=True, blank=True)
@@ -90,12 +121,12 @@ class DatabaseConfig(models.Model):
         return self.province
 
 
-class PatientEligibleVLCollection(models.Model):
+class PacientesCargaAlta(models.Model):
     province = models.CharField(max_length=255)
     district = models.CharField(max_length=255, blank=True, null=True)
     community = models.CharField(max_length=255, blank=True, null=True)
     health_facility = models.CharField(max_length=255, blank=True, null=True)
-    patient_id = models.IntegerField()
+   # patient_id = models.IntegerField()
     patient_name = models.CharField(max_length=255)
     patient_identifier = models.CharField(
         max_length=255, null=True, blank=True)
@@ -106,7 +137,33 @@ class PatientEligibleVLCollection(models.Model):
     last_vl_date = models.DateTimeField(null=True, blank=True)
     last_vl_value = models.CharField(max_length=100, null=True, blank=True)
     last_vl_quality = models.CharField(max_length=100, null=True, blank=True)
-    synced = models.BooleanField(default=False, null=True, blank=True)
+    created_at = models.DateField()
+
+    class Meta:
+        verbose_name = 'Paciente com Carga viral alta'
+        verbose_name_plural = 'Pacientes com Carga viral alta'
+
+    def __str__(self):
+        return self.patient_name
+
+
+class PatientEligibleVLCollection(models.Model):
+    province = models.CharField(max_length=255)
+    district = models.CharField(max_length=255, blank=True, null=True)
+    community = models.CharField(max_length=255, blank=True, null=True)
+    health_facility = models.CharField(max_length=255, blank=True, null=True)
+   # patient_id = models.IntegerField()
+    patient_name = models.CharField(max_length=255)
+    patient_identifier = models.CharField(
+        max_length=255, null=True, blank=True)
+    age = models.IntegerField()
+    phone_number = models.CharField(max_length=255, null=True, blank=True)
+    pregnant = models.CharField(
+        max_length=10, default="NAO", null=True, blank=True)
+    last_vl_date = models.DateTimeField(null=True, blank=True)
+    last_vl_value = models.CharField(max_length=100, null=True, blank=True)
+    last_vl_quality = models.CharField(max_length=100, null=True, blank=True)
+    synced = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Patient Eligible for VL Collection'
@@ -121,7 +178,7 @@ class ViralLoadTestResult(models.Model):
     district = models.CharField(max_length=150, blank=True, null=True)
     community = models.CharField(max_length=150, blank=True, null=True)
     health_facility = models.CharField(max_length=150, blank=True, null=True)
-    patient_id = models.IntegerField()
+    # patient_id = models.IntegerField()
     patient_name = models.CharField(max_length=255)
     patient_identifier = models.CharField(
         max_length=255, null=True, blank=True)

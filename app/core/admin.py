@@ -6,7 +6,8 @@ from django.utils.translation import gettext as _
 from import_export.admin import ImportExportMixin
 from core.models import (DatabaseConfig, MissedAppointment,
                          PatientEligibleVLCollection, ViralLoadTestResult,
-                         Visit)
+                         Visit, ElegiveisCv, MarcadosLevantamento,
+                         PacientesCargaAlta)
 # Register your models here.
 
 
@@ -81,3 +82,5 @@ admin.site.register(PatientEligibleVLCollection,
 admin.site.register(ViralLoadTestResult, ViralLoadTestResultAdmin)
 # admin.site.register(GlobalProperty, GlobalPropertyAdmin)
 admin.site.register(DatabaseConfig, DatabaseConfigAdmin)
+admin.site.register(MarcadosLevantamento)
+admin.site.register(PacientesCargaAlta)
