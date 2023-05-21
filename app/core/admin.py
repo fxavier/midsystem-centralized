@@ -1,13 +1,11 @@
 from django.contrib import admin
 from users.models import User
-from core.models import ElegiveisCv
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext as _
 from import_export.admin import ImportExportMixin
 from core.models import (DatabaseConfig, MissedAppointment,
                          PatientEligibleVLCollection, ViralLoadTestResult,
-                         Visit, ElegiveisCv, MarcadosLevantamento,
-                         PacientesCargaAlta)
+                         Visit)
 # Register your models here.
 
 
@@ -33,8 +31,9 @@ class UserAdmin(BaseUserAdmin):
 
 class VisitAdmin(ImportExportMixin, admin.ModelAdmin):
     list_display = [
-        'id', 'province', 'district', 'health_facility', 'patient_identifier',
-        'age', 'gender', 'appointment_date', 'next_appointment_date', 'synced'
+        'province', 'district', 'health_facility', 'patient_identifier',
+        'age', 'appointment_date', 'next_appointment_date', 'created_at',
+        'synced'
     ]
 
 
@@ -47,15 +46,17 @@ class MissedAppointmentAdmin(ImportExportMixin, admin.ModelAdmin):
 
 class PatientEligibleVLCollectionAdmin(ImportExportMixin, admin.ModelAdmin):
     list_display = [
-        'id', 'province', 'district', 'health_facility', 'patient_identifier',
-        'age', 'last_vl_date', 'last_vl_value', 'last_vl_quality', 'synced'
+        'province', 'district', 'health_facility', 'patient_identifier',
+        'age', 'last_vl_date', 'last_vl_value', 'last_vl_quality',
+        'created_at', 'synced'
     ]
 
 
 class ViralLoadTestResultAdmin(ImportExportMixin, admin.ModelAdmin):
     list_display = [
-        'id', 'province', 'district', 'health_facility', 'patient_identifier',
-        'age', 'last_vl_date', 'last_vl_value', 'last_vl_quality', 'synced'
+        'province', 'district', 'health_facility', 'patient_identifier',
+        'age', 'last_vl_date', 'last_vl_value', 'last_vl_quality',
+        'created_at', 'synced'
     ]
 
 
@@ -74,13 +75,9 @@ class DatabaseConfigAdmin(ImportExportMixin, admin.ModelAdmin):
 
 
 admin.site.register(User, UserAdmin)
-admin.site.register(ElegiveisCv)
 admin.site.register(Visit, VisitAdmin)
 admin.site.register(MissedAppointment, MissedAppointmentAdmin)
 admin.site.register(PatientEligibleVLCollection,
                     PatientEligibleVLCollectionAdmin)
 admin.site.register(ViralLoadTestResult, ViralLoadTestResultAdmin)
-# admin.site.register(GlobalProperty, GlobalPropertyAdmin)
 admin.site.register(DatabaseConfig, DatabaseConfigAdmin)
-admin.site.register(MarcadosLevantamento)
-admin.site.register(PacientesCargaAlta)
