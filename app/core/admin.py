@@ -33,14 +33,14 @@ class VisitAdmin(ImportExportMixin, admin.ModelAdmin):
     list_display = [
         'province', 'district', 'health_facility', 'patient_identifier',
         'age', 'appointment_date', 'next_appointment_date', 'created_at',
-        'synced'
+        'sent'
     ]
 
 
 class MissedAppointmentAdmin(ImportExportMixin, admin.ModelAdmin):
     list_display = [
         'id', 'province', 'district', 'health_facility', 'patient_identifier',
-        'age', 'gender', 'last_appointment_date', 'synced'
+        'age', 'gender', 'last_appointment_date', 'sent'
     ]
 
 
@@ -48,7 +48,7 @@ class PatientEligibleVLCollectionAdmin(ImportExportMixin, admin.ModelAdmin):
     list_display = [
         'province', 'district', 'health_facility', 'patient_identifier',
         'age', 'last_vl_date', 'last_vl_value', 'last_vl_quality',
-        'created_at', 'synced'
+        'created_at', 'sent'
     ]
 
 
@@ -56,7 +56,7 @@ class ViralLoadTestResultAdmin(ImportExportMixin, admin.ModelAdmin):
     list_display = [
         'province', 'district', 'health_facility', 'patient_identifier',
         'age', 'last_vl_date', 'last_vl_value', 'last_vl_quality',
-        'created_at', 'synced'
+        'created_at', 'sent'
     ]
 
 

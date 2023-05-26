@@ -19,7 +19,7 @@ class Visit(models.Model):
     breastfeeding = models.CharField(max_length=10, default="NAO")
     tb = models.CharField(max_length=10, default="NAO")
     created_at = models.DateField(auto_now=True)
-    synced = models.BooleanField(default=False)
+    sent = models.BooleanField(default=False)
 
     def __str__(self):
         return self.patient_name
@@ -43,7 +43,7 @@ class MissedAppointment(models.Model):
     drug_pickup_missed_days = models.IntegerField(
         default=0, null=True, blank=True)
     visit_missed_days = models.IntegerField(default=0, null=True, blank=True)
-    synced = models.BooleanField(default=False)
+    sent = models.BooleanField(default=False)
 
     def __str__(self):
         return self.patient_name
@@ -94,7 +94,7 @@ class PatientEligibleVLCollection(models.Model):
     last_vl_value = models.CharField(max_length=100, null=True, blank=True)
     last_vl_quality = models.CharField(max_length=100, null=True, blank=True)
     created_at = models.DateField(auto_now=True)
-    synced = models.BooleanField(default=False)
+    sent = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Patient Eligible for VL Collection'
@@ -121,7 +121,7 @@ class ViralLoadTestResult(models.Model):
     last_vl_value = models.CharField(max_length=100, null=True, blank=True)
     last_vl_quality = models.CharField(max_length=100, null=True, blank=True)
     created_at = models.DateField(auto_now=True)
-    synced = models.BooleanField(default=False)
+    sent = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Viral Load Test Result'
