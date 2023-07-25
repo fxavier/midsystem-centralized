@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-
+import datetime
 import requests
 from core.models import (DatabaseConfig, MissedAppointment,
                          PatientEligibleVLCollection, ViralLoadTestResult,
@@ -49,7 +49,7 @@ class PostData:
             payload['property'] = data_values
             payload_list.append(payload)
 
-            item.synced = True
+            item.sent = True
             item.save()
 
         return payload_list
@@ -75,7 +75,7 @@ class PostData:
     @classmethod
     def post_sms_reminder(cls):
         queryset = Visit.objects.exclude(
-            phone_number=None).filter(synced=False)
+            phone_number=None).filter(sent=False)
         payload_list = cls.create_payload(
             queryset, "463089", "next_appointment_date", "gender")
         cls.post_data(payload_list)
@@ -90,13 +90,13 @@ class PostData:
     @classmethod
     def post_eligible_for_vl(cls):
         queryset = PatientEligibleVLCollection.objects.exclude(
-            phone_number=None).filter(synced=False)
+            phone_number=None).filter(sent=False)
         payload_list = cls.create_payload(queryset, "696884")
         cls.post_data(payload_list)
 
     @classmethod
     def post_vl_test_result(cls):
         queryset = ViralLoadTestResult.objects.exclude(
-            phone_number=None).filter(synced=False)
+            phone_number=None).filter(sent=False)
         payload_list = cls.create_payload(queryset, "696885")
         cls.post_data(payload_list)

@@ -6,6 +6,7 @@ from celery import shared_task
 #                          PatientEligibleVLCollection, ViralLoadTestResult,
 #                          Visit)
 from core.services.post_data import PostData
+from core.services import fetch_data
 
 
 @shared_task
@@ -26,3 +27,8 @@ def envio_eligiveis_carga_viral():
 @shared_task
 def envio_pacientes_carga_viral_alta():
     PostData().post_vl_test_result()
+
+
+@shared_task
+def buscar_dados():
+    fetch_data.main()

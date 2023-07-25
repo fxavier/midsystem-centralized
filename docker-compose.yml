@@ -13,6 +13,10 @@ services:
     volumes:
       - ./app:/app
       - ./data/web:/vol/web
+      - ./data:/vol
+ 
+    env_file:
+      - .env
 
     environment:
       - SECRET_KEY=devsecretkey
@@ -23,10 +27,28 @@ services:
       - DB_PASS=changeme
       - CELERY_BROKER=redis://redis:6379/0
       - CELERY_BACKEND=redis://redis:6379/0
+      - MYSQL_CA=${MYSQL_CA}
+      - MYSQL_CERT=${MYSQL_CERT}
+      - MYSQL_KEY=${MYSQL_KEY}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - SOFALA_MYSQL_HOST=${SOFALA_MYSQL_HOST}
+      - SOFALA_MYSQL_PORT=${SOFALA_MYSQL_PORT}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - PG_USER=${PG_USER}
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_HOST=localhost
+      - PG_PORT=5432
+      - PG_DATABASE=dbcentralized
+
+    networks:
+      - mid_network
 
     depends_on:
       - db
       - redis
+
+
 
   db:
     image: postgres:13-alpine
@@ -37,9 +59,13 @@ services:
       - POSTGRES_PASSWORD=changeme
     volumes:
       - pgdata:/var/lib/postgresql/data/
+    env_file:
+      - .env
 
     ports:
       - 5432:5432
+    networks:
+      - mid_network
 
 #   mysql:
 #     image: mysql:5.7.41-debian
@@ -67,6 +93,9 @@ services:
     command: celery -A app worker -l info
     volumes: 
       - ./app:/app
+    env_file:
+      - .env
+
     environment:
       - SECRET_KEY=devsecretkey
       - DEBUG=1
@@ -76,6 +105,22 @@ services:
       - DB_PASS=changeme
       - CELERY_BROKER=redis://redis:6379/0
       - CELERY_BACKEND=redis://redis:6379/0
+      - MYSQL_CA=${MYSQL_CA}
+      - MYSQL_CERT=${MYSQL_CERT}
+      - MYSQL_KEY=${MYSQL_KEY}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - SOFALA_MYSQL_HOST=${SOFALA_MYSQL_HOST}
+      - SOFALA_MYSQL_PORT=${SOFALA_MYSQL_PORT}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - PG_USER=${PG_USER}
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_HOST=localhost
+      - PG_PORT=5432
+      - PG_DATABASE=dbcentralized
+    
+    networks:
+      - mid_network
       
     depends_on:
       - app
@@ -88,6 +133,9 @@ services:
     command: celery -A app beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
     volumes: 
       - ./app:/app
+    env_file:
+      - .env
+
     environment:
       - SECRET_KEY=devsecretkey
       - DEBUG=1
@@ -97,6 +145,22 @@ services:
       - DB_PASS=changeme
       - CELERY_BROKER=redis://redis:6379/0
       - CELERY_BACKEND=redis://redis:6379/0
+      - MYSQL_CA=${MYSQL_CA}
+      - MYSQL_CERT=${MYSQL_CERT}
+      - MYSQL_KEY=${MYSQL_KEY}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - SOFALA_MYSQL_HOST=${SOFALA_MYSQL_HOST}
+      - SOFALA_MYSQL_PORT=${SOFALA_MYSQL_PORT}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - PG_USER=${PG_USER}
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_HOST=localhost
+      - PG_PORT=5432
+      - PG_DATABASE=dbcentralized
+
+    networks:
+      - mid_network
 
     depends_on:
       - app
@@ -107,9 +171,13 @@ services:
       container_name: mid-redis-centralized
       ports:
         - 6379:6379
-  
+      networks:
+       - mid_network
+
+networks:
+  mid_network:
+    driver: bridge
 
 volumes:
   pgdata:
 
-      

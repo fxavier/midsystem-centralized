@@ -6,10 +6,10 @@ class Visit(models.Model):
     district = models.CharField(max_length=150, blank=True, null=True)
     health_facility = models.CharField(max_length=150)
     # patient_id = models.IntegerField()
-    patient_name = models.CharField(max_length=255)
+    patient_name = models.CharField(max_length=255, null=True, blank=True)
     patient_identifier = models.CharField(
         max_length=255, null=True, blank=True)
-    age = models.IntegerField()
+    age = models.IntegerField(null=True, blank=True)
     phone_number = models.CharField(max_length=150, null=True, blank=True)
     appointment_date = models.DateTimeField()
     next_appointment_date = models.DateTimeField()
@@ -30,7 +30,7 @@ class MissedAppointment(models.Model):
     district = models.CharField(max_length=150, blank=True, null=True)
     health_facility = models.CharField(max_length=150, blank=True, null=True)
     # patient_id = models.IntegerField()
-    patient_name = models.CharField(max_length=255)
+    patient_name = models.CharField(max_length=255, null=True, blank=True)
     patient_identifier = models.CharField(
         max_length=255, null=True, blank=True)
     age = models.IntegerField()
@@ -83,10 +83,10 @@ class PatientEligibleVLCollection(models.Model):
     community = models.CharField(max_length=255, blank=True, null=True)
     health_facility = models.CharField(max_length=255, blank=True, null=True)
    # patient_id = models.IntegerField()
-    patient_name = models.CharField(max_length=255)
+    patient_name = models.CharField(max_length=255, null=True, blank=True)
     patient_identifier = models.CharField(
         max_length=255, null=True, blank=True)
-    age = models.IntegerField()
+    age = models.IntegerField(null=True, blank=True)
     phone_number = models.CharField(max_length=255, null=True, blank=True)
     pregnant = models.CharField(
         max_length=10, default="NAO", null=True, blank=True)
@@ -110,10 +110,10 @@ class ViralLoadTestResult(models.Model):
     community = models.CharField(max_length=150, blank=True, null=True)
     health_facility = models.CharField(max_length=150, blank=True, null=True)
     # patient_id = models.IntegerField()
-    patient_name = models.CharField(max_length=255)
+    patient_name = models.CharField(max_length=255, null=True, blank=True)
     patient_identifier = models.CharField(
         max_length=255, null=True, blank=True)
-    age = models.IntegerField()
+    age = models.IntegerField(null=True, blank=True)
     phone_number = models.CharField(max_length=150, null=True, blank=True)
     pregnant = models.CharField(
         max_length=10, default="NAO", null=True, blank=True)

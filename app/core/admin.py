@@ -81,3 +81,5 @@ admin.site.register(PatientEligibleVLCollection,
                     PatientEligibleVLCollectionAdmin)
 admin.site.register(ViralLoadTestResult, ViralLoadTestResultAdmin)
 admin.site.register(DatabaseConfig, DatabaseConfigAdmin)
+
+admin.site.site_header = 'MidSystem Centralized'
