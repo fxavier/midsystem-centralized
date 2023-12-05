@@ -1,9 +1,22 @@
 from dataclasses import dataclass
-import datetime
+from datetime import datetime
+import csv
 import requests
+from django.conf import settings
+import os
+import logging
+from core.utils.date_conversion import DateConversion
 from core.models import (DatabaseConfig, MissedAppointment,
                          PatientEligibleVLCollection, ViralLoadTestResult,
                          Visit)
+
+# Obtain a logger instance
+# logger = logging.getLogger('app')
+
+# Configure logging
+filename = os.path.join(settings.BASE_DIR, 'bulk_sending.log')
+logging.basicConfig(filename=filename, level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 @dataclass
@@ -19,10 +32,17 @@ class PostData:
     ):
         payload_list = []
         for item in queryset:
-            phone = item.phone_number.strip()
+            # Validate phone number
+            valid_phone = DateConversion.validate_phone_number(
+                item.phone_number.strip()
+            )
+
+            # Skip adding to payload if phone number is invalid
+            if valid_phone is None:
+                continue
+
             payload = {
-                "api_key": cls.database_conf.viamo_api_public_key,
-                "phone": phone[:9],
+                "phone": valid_phone,
                 "receive_voice": "1",
                 "receive_sms": "1",
                 "preferred_channel": "1",
@@ -46,7 +66,7 @@ class PostData:
             if gender_attribute:
                 data_values[gender_attribute] = getattr(item, gender_attribute)
 
-            payload['property'] = data_values
+            payload["property"] = data_values
             payload_list.append(payload)
 
             item.sent = True
@@ -72,13 +92,62 @@ class PostData:
         except requests.exceptions.RequestException as err:
             print(err)
 
+    # @classmethod
+    # def post_bulk_data(cls, payload_list):
+    #     try:
+    #         headers = {
+    #             "Authorization": f"Bearer {cls.database_conf.viamo_api_public_key}"}
+    #         response = requests.post(
+    #             cls.database_conf.viamo_api_url,
+    #             json={"subscribers": payload_list},
+    #             headers=headers
+    #         )
+
+    #         if response.status_code == 200:
+    #             response_data = response.json()
+    #             if 'message' in response_data and response_data['message'] == "Subscriber(s) created successfully!":
+    #                 print(f"Success! Group ID: {response_data['data']}")
+    #             else:
+    #                 print(
+    #                     f"Failed to create subscribers. Bad Input. Problematic numbers: {response_data['data']}")
+    #         else:
+    #             print(
+    #                 f"Request failed with status code: {response.status_code}")
+    #             print(response.text)
+    #     except requests.exceptions.RequestException as err:
+    #         print(err)
+
+    @classmethod
+    def post_bulk_data(cls, payload_list):
+        try:
+            payload = {
+                "api_key": cls.database_conf.viamo_api_public_key,
+                "subscribers": payload_list
+            }
+            response = requests.post(
+                cls.database_conf.viamo_api_url, json=payload)
+            if response.status_code == 200:
+                response_data = response.json()
+                if 'message' in response_data and response_data['message'] == "Subscriber(s) created successfully!":
+                    logging.info(f"Success! Group ID: {response_data['data']}")
+                else:
+                    logging.warning(
+                        f"Failed to create subscribers. Bad Input. Problematic numbers: {response_data['data']}")
+            else:
+                logging.error(
+                    f"Request failed with status code: {response.status_code}")
+                logging.error(response.text)  # To help diagnose the issue
+        except requests.exceptions.RequestException as err:
+            logging.exception(f"RequestException: {err}")
+
     @classmethod
     def post_sms_reminder(cls):
         queryset = Visit.objects.exclude(
-            phone_number=None).filter(sent=False)
+            phone_number=None)
         payload_list = cls.create_payload(
             queryset, "463089", "next_appointment_date", "gender")
-        cls.post_data(payload_list)
+        print(payload_list[:20])
+        cls.post_bulk_data(payload_list[:20])
 
     @classmethod
     def post_missed_appointment(cls):
@@ -90,13 +159,30 @@ class PostData:
     @classmethod
     def post_eligible_for_vl(cls):
         queryset = PatientEligibleVLCollection.objects.exclude(
-            phone_number=None).filter(sent=False)
+            phone_number=None)  # .filter(sent=False)
         payload_list = cls.create_payload(queryset, "696884")
         cls.post_data(payload_list)
 
     @classmethod
     def post_vl_test_result(cls):
         queryset = ViralLoadTestResult.objects.exclude(
-            phone_number=None).filter(sent=False)
+            phone_number=None)  # .filter(sent=False)
         payload_list = cls.create_payload(queryset, "696885")
         cls.post_data(payload_list)
+
+    def fetch_data_created_today(cls):
+        today = datetime.now().date()
+        visits_today = Visit.objects.filter(created_at=today)
+        return visits_today
+
+    def save_appointments_to_csv(queryset, filename, filepath):
+        with open(filename, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            # Write the headers to the CSV file
+            writer.writerow([field.name for field in Visit._meta.fields])
+
+            # Write the data rows to the CSV file
+            for visit in queryset:
+                row = [getattr(visit, field.name)
+                       for field in Visit._meta.fields]
+                writer.writerow(row)

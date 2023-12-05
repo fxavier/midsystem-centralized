@@ -2,18 +2,19 @@ from django.db import models
 
 
 class Visit(models.Model):
-    province = models.CharField(max_length=150)
-    district = models.CharField(max_length=150, blank=True, null=True)
+    province = models.CharField(max_length=500)
+    district = models.CharField(max_length=500, blank=True, null=True)
     health_facility = models.CharField(max_length=150)
     # patient_id = models.IntegerField()
-    patient_name = models.CharField(max_length=255, null=True, blank=True)
+    patient_name = models.CharField(max_length=500, null=True, blank=True)
     patient_identifier = models.CharField(
-        max_length=255, null=True, blank=True)
+        max_length=500, null=True, blank=True)
     age = models.IntegerField(null=True, blank=True)
-    phone_number = models.CharField(max_length=150, null=True, blank=True)
+    # models.CharField(max_length=500, null=True, blank=True)
+    phone_number = models.TextField(null=True, blank=True)
     appointment_date = models.DateTimeField()
     next_appointment_date = models.DateTimeField()
-    gender = models.CharField(max_length=150)
+    gender = models.CharField(max_length=500)
     community = models.CharField(max_length=500, blank=True, null=True)
     pregnant = models.CharField(max_length=10, default="NAO")
     breastfeeding = models.CharField(max_length=10, default="NAO")
