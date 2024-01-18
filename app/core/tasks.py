@@ -2,12 +2,9 @@ from __future__ import absolute_import, unicode_literals
 
 from celery import shared_task
 
-# from core.models import (DatabaseConfig, MissedAppointment,
-#                          PatientEligibleVLCollection, ViralLoadTestResult,
-#                          Visit)
 from django.conf import settings
 from core.services.post_data import PostData
-from core.services import fetch_data
+from core.services.data_service import DataService
 from datetime import datetime
 from core.models import Visit
 import csv
@@ -17,6 +14,10 @@ import os
 @shared_task
 def Envio_pacientes_marcados_levantamento():
     PostData.post_sms_reminder()
+
+@shared_task
+def Envio_lista_pacientes_levantamento():
+    DataService.post_bulk_sms_reminder()
 
 
 @shared_task
@@ -28,10 +29,17 @@ def Envio_faltosos_ao_levantamento_ou_consulta():
 def envio_eligiveis_carga_viral():
     PostData().post_eligible_for_vl()
 
+@shared_task
+def envio_bulk_eligiveis_carga_viral():
+    DataService.post_bulk_vl_eligibility()
 
 @shared_task
 def envio_pacientes_carga_viral_alta():
     PostData().post_vl_test_result()
+
+@shared_task
+def envio_bulk_pacientes_carga_viral_alta():
+    DataService.post_bulk_vl_test_result()
 
 
 @shared_task

@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.9'
 
 services:
   app:
@@ -6,14 +6,14 @@ services:
     build:
       context: .
     command: >
-     sh -c "python manage.py migrate &&
+     sh -c "python manage.py wait_for_db &&
+            python manage.py migrate &&
             python manage.py runserver 0.0.0.0:8000"
     ports:
       - 8000:8000
     volumes:
       - ./app:/app
       - ./data/web:/vol/web
-      - ./data:/vol
  
     env_file:
       - .env
@@ -27,19 +27,19 @@ services:
       - DB_PASS=changeme
       - CELERY_BROKER=redis://redis:6379/0
       - CELERY_BACKEND=redis://redis:6379/0
-      - MYSQL_CA=${MYSQL_CA}
-      - MYSQL_CERT=${MYSQL_CERT}
-      - MYSQL_KEY=${MYSQL_KEY}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - SOFALA_MYSQL_HOST=${SOFALA_MYSQL_HOST}
-      - SOFALA_MYSQL_PORT=${SOFALA_MYSQL_PORT}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - PG_USER=${PG_USER}
-      - PG_PASSWORD=${PG_PASSWORD}
-      - PG_HOST=localhost
-      - PG_PORT=5432
-      - PG_DATABASE=dbcentralized
+      # - MYSQL_CA=${MYSQL_CA}
+      # - MYSQL_CERT=${MYSQL_CERT}
+      # - MYSQL_KEY=${MYSQL_KEY}
+      # - MYSQL_USER=${MYSQL_USER}
+      # - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      # - SOFALA_MYSQL_HOST=${SOFALA_MYSQL_HOST}
+      # - SOFALA_MYSQL_PORT=${SOFALA_MYSQL_PORT}
+      # - MYSQL_DATABASE=${MYSQL_DATABASE}
+      # - PG_USER=${PG_USER}
+      # - PG_PASSWORD=${PG_PASSWORD}
+      # - PG_HOST=localhost
+      # - PG_PORT=5432
+      # - PG_DATABASE=dbcentralized
 
     networks:
       - mid_network
@@ -53,6 +53,7 @@ services:
   db:
     image: postgres:13-alpine
     container_name: middb-centralized
+    restart: always
     environment:
       - POSTGRES_DB=dbcentralized
       - POSTGRES_USER=dbcentralized
@@ -66,24 +67,6 @@ services:
       - 5432:5432
     networks:
       - mid_network
-
-#   mysql:
-#     image: mysql:5.7.41-debian
-#     container_name: remote_mysql
-#     command: --default-authentication-plugin=mysql_native_password
-#     restart: always
-#     environment:
-#       - MYSQL_USER=nXavier
-#       - MYSQL_PASSWORD=Lun@rOrbit
-#       - MYSQL_DATABASE=aux_central_db
-#       - MYSQL_ALLOW_EMPTY_PASSWORD=""
-# #      - MYSQL_ROOT_PASSWORD=AAAAAAA
-#     volumes:
-#       - mysqldata:/var/lib/mysql
-#       - ./home/xavier/Documents/certificados:/certs
-
-#     ports:
-#       - 23307:23307
   
   celery:
     container_name: mid-celery-centralized
@@ -105,19 +88,19 @@ services:
       - DB_PASS=changeme
       - CELERY_BROKER=redis://redis:6379/0
       - CELERY_BACKEND=redis://redis:6379/0
-      - MYSQL_CA=${MYSQL_CA}
-      - MYSQL_CERT=${MYSQL_CERT}
-      - MYSQL_KEY=${MYSQL_KEY}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - SOFALA_MYSQL_HOST=${SOFALA_MYSQL_HOST}
-      - SOFALA_MYSQL_PORT=${SOFALA_MYSQL_PORT}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - PG_USER=${PG_USER}
-      - PG_PASSWORD=${PG_PASSWORD}
-      - PG_HOST=localhost
-      - PG_PORT=5432
-      - PG_DATABASE=dbcentralized
+      # - MYSQL_CA=${MYSQL_CA}
+      # - MYSQL_CERT=${MYSQL_CERT}
+      # - MYSQL_KEY=${MYSQL_KEY}
+      # - MYSQL_USER=${MYSQL_USER}
+      # - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      # - SOFALA_MYSQL_HOST=${SOFALA_MYSQL_HOST}
+      # - SOFALA_MYSQL_PORT=${SOFALA_MYSQL_PORT}
+      # - MYSQL_DATABASE=${MYSQL_DATABASE}
+      # - PG_USER=${PG_USER}
+      # - PG_PASSWORD=${PG_PASSWORD}
+      # - PG_HOST=localhost
+      # - PG_PORT=5432
+      # - PG_DATABASE=dbcentralized
     
     networks:
       - mid_network
@@ -145,19 +128,19 @@ services:
       - DB_PASS=changeme
       - CELERY_BROKER=redis://redis:6379/0
       - CELERY_BACKEND=redis://redis:6379/0
-      - MYSQL_CA=${MYSQL_CA}
-      - MYSQL_CERT=${MYSQL_CERT}
-      - MYSQL_KEY=${MYSQL_KEY}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - SOFALA_MYSQL_HOST=${SOFALA_MYSQL_HOST}
-      - SOFALA_MYSQL_PORT=${SOFALA_MYSQL_PORT}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - PG_USER=${PG_USER}
-      - PG_PASSWORD=${PG_PASSWORD}
-      - PG_HOST=localhost
-      - PG_PORT=5432
-      - PG_DATABASE=dbcentralized
+      # - MYSQL_CA=${MYSQL_CA}
+      # - MYSQL_CERT=${MYSQL_CERT}
+      # - MYSQL_KEY=${MYSQL_KEY}
+      # - MYSQL_USER=${MYSQL_USER}
+      # - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      # - SOFALA_MYSQL_HOST=${SOFALA_MYSQL_HOST}
+      # - SOFALA_MYSQL_PORT=${SOFALA_MYSQL_PORT}
+      # - MYSQL_DATABASE=${MYSQL_DATABASE}
+      # - PG_USER=${PG_USER}
+      # - PG_PASSWORD=${PG_PASSWORD}
+      # - PG_HOST=localhost
+      # - PG_PORT=5432
+      # - PG_DATABASE=dbcentralized
 
     networks:
       - mid_network

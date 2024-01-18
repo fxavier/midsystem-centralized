@@ -17,8 +17,8 @@ django-cors-headers>=3.13.0,<4
 graphene-django>=2.15.0,<2.16
 django-graphql-jwt>=0.3.4,<0.4
 PyJWT==2.0.0
-mysqlclient==2.1.0
-mysql-connector-python
+#mysqlclient==2.1.0
+#mysql-connector-python
 protobuf
 python-dotenv==1.0.0
 mccabe==0.7.0
