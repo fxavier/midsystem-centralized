@@ -98,10 +98,14 @@ class DataService:
             phone_number=None)
         payload = cls.create_payload(
             queryset, "463089", "appointment_date", "gender")
-        response = requests.post(
-                f'{cls.database_conf.viamo_api_url}?api_key={cls.database_conf.viamo_api_public_key}', json=payload)
-        print(f'SMS REMINDERS: {response.json()}')
-        print(len(payload), 'records sent')
+        # Split payload into chunks of 500
+        chunks = [payload[i:i + 500] for i in range(0, len(payload), 500)]
+
+        for chunk in chunks:
+            response = requests.post(
+                f'{cls.database_conf.viamo_api_url}?api_key={cls.database_conf.viamo_api_public_key}', json=chunk)
+            print(f'SMS REMINDERS: {response.json()}')
+            print(len(chunk), 'records sent')
      
 
     @classmethod
@@ -109,19 +113,27 @@ class DataService:
         queryset = PatientEligibleVLCollection.objects.exclude(
             phone_number=None)
         payload = cls.create_payload(queryset, "696884",  "gender")
-        response = requests.post(
-                f'{cls.database_conf.viamo_api_url}?api_key={cls.database_conf.viamo_api_public_key}', json=payload)
-        print(f'VL ELIGIBILITY: {response.json()}')
-        print(len(payload), 'records sent')
+        # Split payload into chunks of 500
+        chunks = [payload[i:i + 500] for i in range(0, len(payload), 500)]
+    
+        for chunk in chunks:
+            response = requests.post(
+                f'{cls.database_conf.viamo_api_url}?api_key={cls.database_conf.viamo_api_public_key}', json=chunk)
+            print(f'VL ELEGIBILITY: {response.json()}')
+            print(len(chunk), 'records sent')
 
     @classmethod
     def post_bulk_vl_test_result(cls):
         queryset = ViralLoadTestResult.objects.exclude(
             phone_number=None)
         payload = cls.create_payload(queryset, "696885",  "gender")
-        response = requests.post(
-                f'{cls.database_conf.viamo_api_url}?api_key={cls.database_conf.viamo_api_public_key}', json=payload)
-        print(f'VL TEST RESULT: {response.json()}')
-        print(len(payload), 'records sent')
+        # Split payload into chunks of 500
+        chunks = [payload[i:i + 500] for i in range(0, len(payload), 500)]
+    
+        for chunk in chunks:
+            response = requests.post(
+                f'{cls.database_conf.viamo_api_url}?api_key={cls.database_conf.viamo_api_public_key}', json=chunk)
+            print(f'VL TEST RESULT: {response.json()}')
+            print(len(chunk), 'records sent')
       
    
