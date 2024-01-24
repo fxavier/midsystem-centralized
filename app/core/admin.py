@@ -32,7 +32,7 @@ class UserAdmin(BaseUserAdmin):
 class VisitAdmin(ImportExportMixin, admin.ModelAdmin):
     list_display = [
         'province', 'district', 'health_facility', 'patient_identifier',
-        'age', 'appointment_date', 'next_appointment_date', 'created_at',
+        'age', 'last_appointment_date', 'appointment_date', 'created_at',
         'sent'
     ]
 

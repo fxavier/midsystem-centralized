@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 class Visit(models.Model):
@@ -12,8 +13,8 @@ class Visit(models.Model):
     age = models.IntegerField(null=True, blank=True)
     # models.CharField(max_length=500, null=True, blank=True)
     phone_number = models.TextField(null=True, blank=True)
-    appointment_date = models.DateTimeField()
-    next_appointment_date = models.DateTimeField()
+    last_appointment_date = models.DateTimeField(default=timezone.now)
+    appointment_date = models.DateTimeField(default=timezone.now)
     gender = models.CharField(max_length=500)
     community = models.CharField(max_length=500, blank=True, null=True)
     pregnant = models.CharField(max_length=10, default="NAO")
