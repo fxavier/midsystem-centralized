@@ -5,7 +5,7 @@ from django.utils.translation import gettext as _
 from import_export.admin import ImportExportMixin
 from core.models import (DatabaseConfig, MissedAppointment,
                          PatientEligibleVLCollection, ViralLoadTestResult,
-                         Visit)
+                         Visit, ActiveInDrugMissedAppointment)
 # Register your models here.
 
 
@@ -73,6 +73,13 @@ class DatabaseConfigAdmin(ImportExportMixin, admin.ModelAdmin):
         'viamo_api_url', 'viamo_api_public_key'
     ]
 
+class ActiveInDrugMissedAppointmentAdmin(ImportExportMixin, admin.ModelAdmin):
+    list_display = [
+        'province', 'district', 'health_facility', 'patient_identifier', 'patient_name',
+        'age', 'pregnant', 'appointment_date'
+        ]
+    
+
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Visit, VisitAdmin)
@@ -81,5 +88,6 @@ admin.site.register(PatientEligibleVLCollection,
                     PatientEligibleVLCollectionAdmin)
 admin.site.register(ViralLoadTestResult, ViralLoadTestResultAdmin)
 admin.site.register(DatabaseConfig, DatabaseConfigAdmin)
+admin.site.register(ActiveInDrugMissedAppointment, ActiveInDrugMissedAppointmentAdmin)
 
 admin.site.site_header = 'MidSystem Centralized'

@@ -8,7 +8,7 @@ import logging
 from core.utils.date_conversion import DateConversion
 from core.models import (DatabaseConfig, MissedAppointment,
                          PatientEligibleVLCollection, ViralLoadTestResult,
-                         Visit)
+                         Visit, ActiveInDrugMissedAppointment)
 
 filename = os.path.join(settings.BASE_DIR, 'bulk_sending.log')
 logging.basicConfig(filename=filename, level=logging.INFO,
@@ -142,3 +142,19 @@ class DataService:
             records += len(chunk)
         print('Total records sent:', records)
    
+    @classmethod
+    def post_bulk_active_drug_missed_appointments(cls):
+        queryset = ActiveInDrugMissedAppointment.objects.exclude(
+            phone_number=None)
+        payload = cls.create_payload(
+            queryset, "766719", "appointment_date", "gender")
+        # Split payload into chunks of 500
+        chunks = [payload[i:i + 500] for i in range(0, len(payload), 500)]
+        records = 0
+        for chunk in chunks:
+            response = requests.post(
+                f'{cls.database_conf.viamo_api_url}?api_key={cls.database_conf.viamo_api_public_key}', json=chunk)
+            print(f'SMS REMINDERS: {response.json()}')
+            print(len(chunk), 'records sent')
+            records += len(chunk)
+        print('Total records sent:', records)

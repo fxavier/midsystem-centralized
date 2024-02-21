@@ -131,3 +131,24 @@ class ViralLoadTestResult(models.Model):
 
     def __str__(self):
         return self.patient_name
+
+class ActiveInDrugMissedAppointment(models.Model):
+    province = models.CharField(max_length=150)
+    district = models.CharField(max_length=150, blank=True, null=True)
+    health_facility = models.CharField(max_length=150, blank=True, null=True)
+    # patient_id = models.IntegerField()
+    patient_name = models.CharField(max_length=255, null=True, blank=True)
+    patient_identifier = models.CharField(
+        max_length=255, null=True, blank=True)
+    age = models.IntegerField(blank=True, null=True)
+    phone_number = models.CharField(max_length=150, null=True, blank=True)
+    appointment_date = models.DateTimeField(null=True, blank=True)
+    gender = models.CharField(max_length=150, blank=True, null=True)
+    pregnant = models.CharField(max_length=150, default="NAO", null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Active in Drug Missed Appointment'
+        verbose_name_plural = 'Active in Drug Missed Appointments'
+
+    def __str__(self):
+        return self.patient_name

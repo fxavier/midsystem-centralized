@@ -41,6 +41,10 @@ def envio_pacientes_carga_viral_alta():
 def envio_bulk_pacientes_carga_viral_alta():
     DataService.post_bulk_vl_test_result()
 
+@shared_task
+def envio_bulk_activos_levantamento_faltosos_consulta():
+    DataService.post_bulk_active_drug_missed_appointments()
+
 
 @shared_task
 def save_to_csv():
