@@ -36,7 +36,7 @@ class MissedAppointment(models.Model):
     patient_identifier = models.CharField(
         max_length=255, null=True, blank=True)
     age = models.IntegerField()
-    phone_number = models.CharField(max_length=150, null=True, blank=True)
+    phone_number = models.TextField(null=True, blank=True)
     last_appointment_date = models.DateField(null=True, blank=True)
     gender = models.CharField(max_length=150, blank=True, null=True)
     community = models.CharField(max_length=500, blank=True, null=True)
@@ -89,7 +89,7 @@ class PatientEligibleVLCollection(models.Model):
     patient_identifier = models.CharField(
         max_length=255, null=True, blank=True)
     age = models.IntegerField(null=True, blank=True)
-    phone_number = models.CharField(max_length=255, null=True, blank=True)
+    phone_number = models.TextField(null=True, blank=True)
     pregnant = models.CharField(
         max_length=10, default="NAO", null=True, blank=True)
     last_vl_date = models.DateTimeField(null=True, blank=True)
@@ -116,7 +116,7 @@ class ViralLoadTestResult(models.Model):
     patient_identifier = models.CharField(
         max_length=255, null=True, blank=True)
     age = models.IntegerField(null=True, blank=True)
-    phone_number = models.CharField(max_length=150, null=True, blank=True)
+    phone_number = models.TextField(null=True, blank=True)
     pregnant = models.CharField(
         max_length=10, default="NAO", null=True, blank=True)
     last_vl_date = models.DateTimeField(null=True, blank=True)
@@ -141,7 +141,7 @@ class ActiveInDrugMissedAppointment(models.Model):
     patient_identifier = models.CharField(
         max_length=255, null=True, blank=True)
     age = models.IntegerField(blank=True, null=True)
-    phone_number = models.CharField(max_length=150, null=True, blank=True)
+    phone_number = models.TextField(null=True, blank=True)
     appointment_date = models.DateTimeField(null=True, blank=True)
     gender = models.CharField(max_length=150, blank=True, null=True)
     pregnant = models.CharField(max_length=150, default="NAO", null=True, blank=True)
