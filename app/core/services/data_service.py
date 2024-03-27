@@ -154,7 +154,7 @@ class DataService:
         for chunk in chunks:
             response = requests.post(
                 f'{cls.database_conf.viamo_api_url}?api_key={cls.database_conf.viamo_api_public_key}', json=chunk)
-            print(f'SMS REMINDERS: {response.json()}')
+            print(f'ACTIVE DRUGS MISSED APPOINTMENT: {response.json()}')
             print(len(chunk), 'records sent')
             records += len(chunk)
         print('Total records sent:', records)
